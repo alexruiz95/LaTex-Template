@@ -1,0 +1,187 @@
+% LaTex thesis template for the University of Southampton created 10.2017
+% Author Marin Lauber M.Lauber@soton.ac.uk
+% This templates follows the guidlines for MSc thesis of the academic year 2017-18.
+
+\documentclass[11pt]{report}
+
+% packages needed for the document
+\usepackage[english]{babel}
+\usepackage[a4paper,top=3.5cm, bottom=3.5cm, width=150mm, bindingoffset=6mm,footskip=1.5cm,headsep=1.0cm]{geometry}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage[toc,page]{appendix}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{longtable} % long tables, spanning on multiple pages
+\usepackage{multirow} % multirow in table
+\graphicspath{{images/}} % path of images folder
+\usepackage[labelfont={bf}, textfont={}]{caption} % bold font for table and figure label
+\usepackage{subcaption} % caption in multiple figures
+\usepackage{amsfonts, amsmath, amssymb}
+\usepackage[none]{hyphenat}
+\usepackage{fancyhdr} % do a nice header
+\pagestyle{fancy}
+\fancyhead{} % clear header
+\fancyhead[R]{\leftmark} % chapter name at the top right
+\fancyfoot{} % clear footer
+\fancyfoot[C]{\thepage} % page number at the centre
+\renewcommand{\headrulewidth}{0.1pt}
+\usepackage{booktabs,threeparttable} % tables with table notes
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{booktabs}
+\usepackage{array}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}p{2.5cm}}
+
+% settings of the referencing software
+\usepackage[
+	backend=biber, 
+    natbib=true,
+    hyperref=false,
+    style=authoryear-icomp,
+    maxbibnames=99,
+    maxcitenames=2,
+    uniquelist=false,
+    ibidtracker=false
+    ]
+{biblatex}
+\DeclareNameAlias{author}{last-first}
+
+% location of reference file
+\addbibresource{references.bib}
+
+% nicer spacing in tables
+\setlength{\tabcolsep}{10pt} % Default value: 6pt
+\renewcommand{\arraystretch}{1.25} % Default value:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+% coverpage
+\input{chapters/titlepage}
+
+% New page with the required text. 
+\newpage
+	\begin{center}
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	This thesis was submitted for examination in DATE (e.i. September, 2018). It does not necessarily represent the final form of the thesis as deposited in the University after examination.
+	\vspace*{\fill}
+	\end{center}
+\newpage
+
+% inlcude the abstract, no link to table of contents
+\input{chapters/abstract}
+
+% include declaration of authorship, no link to tabe of content
+\chapter*{Declaration of Authorship}
+\input{chapters/declarationofauthorship}
+
+% include dedication, no link to tabe of content, optional
+\chapter*{Dedication}
+\input{chapters/dedication}
+
+% include acknowledgements, no link to tabe of content
+\chapter*{Acknowledgements}
+\input{chapters/acknowledgements}
+\newpage
+
+% set page numbering to ROMAN for the pages before the main body
+\pagenumbering{Roman}
+
+% creates a phantom section, to hae the TABLE OF CONTENT as a chapter but not 
+% referenced in the table of content of the document.
+\phantomsection 
+\addcontentsline*{toc}{}{}
+\tableofcontents
+\newpage
+
+% creates a phantom section to have the LIST OF FIGURES in the table of content
+\phantomsection 
+\addcontentsline{toc}{chapter}{List of Figures} 
+\listoffigures
+\newpage
+
+% creates a phantom section to have the LIST OF TABLES in the table of content
+\phantomsection 
+\addcontentsline{toc}{chapter}{List of Tables} 
+\listoftables
+\newpage
+
+% creates a phantom section to have the NOMENCALTURE in the table of content
+\phantomsection 
+	\addcontentsline{toc}{chapter}{Nomenclature} 
+	\chapter*{Nomenclature}
+		\input{chapters/definitionandabbreviations} % input chapter from /chapter
+		\label{sec:def}
+		\fancyhead{} % clear header
+		\fancyhead[R]{NOMENCLATURE} % add header for Nomencalture in top Right of page
+\newpage
+
+% creates a phantom section to have the ABREVATION in the table of content
+\phantomsection 
+	\addcontentsline{toc}{chapter}{List of Abbreviations} 
+	\chapter*{List of Abbreviations}
+		\input{chapters/abbreviation} % input chapter from /chapter
+		\label{sec:abbr}
+		\fancyhead{} % clear header
+		\fancyhead[R]{LIST OF ABBREVIATIONS} % add header for Abrevation in top Right of page
+\newpage
+
+% clear page numbering to start arabic page numbering
+\cleardoublepage\pagenumbering{arabic}%
+\fancyhead{} %clear header
+\fancyhead[R]{\leftmark} % use header defined earlier
+
+% input introduction
+\chapter{Introduction}
+\input{chapters/introduction}
+
+% input background
+\chapter{Background}
+\input{chapters/background}
+
+%input Mathematical model
+\chapter{Theory}
+\input{chapters/theory}
+
+% input methodology
+\chapter{Methodology}
+\input{chapters/methodology}
+
+% input chapterX
+\chapter{Chapter X}
+\input{chapters/X}
+
+% input chapterXX
+\chapter{Chapter XX}
+\input{chapters/XX}
+
+% input conclusion
+\chapter{Conclusion and Future Work}
+\input{chapters/conclusion}
+
+% create phantom section for REFERENCES, with link in table of content
+\newpage
+\phantomsection 
+\addcontentsline{toc}{chapter}{References} 
+\printbibliography[title={References}]
+
+% input as appendix
+\appendix
+\input{chapters/appendix}
+
+% last page LEFT BLANK INTENTIONALLY
+\newpage
+	\begin{center}
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	Page left intentionally blank.
+	\vspace*{\fill}
+	\end{center}
+\newpage
+
+\end{document}
