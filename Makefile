@@ -32,7 +32,7 @@ clean:
 	-rm -f *.run.xml
 	-rm -f *.toc
 
-.PHONY: cleanall	# prevents make of getting confused if you have a file called cleanall
-cleanall: clean
+.PHONY: cleaner	# prevents make of getting confused if you have a file called cleanall
+cleaner: clean
 	-rm -f *.pdf
 	-rm -rf ./make

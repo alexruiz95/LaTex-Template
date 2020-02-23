@@ -1,0 +1,47 @@
+% packages needed for the document
+\usepackage[english]{babel}
+\usepackage[a4paper,top=3.5cm, bottom=3.5cm, width=150mm, bindingoffset=6mm,footskip=1.5cm,headsep=1.0cm]{geometry}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage[toc,page]{appendix}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{longtable} % long tables, spanning on multiple pages
+\usepackage{multirow} % multirow in table
+\usepackage[labelfont={bf}, textfont={}]{caption} % bold font for table and figure label
+\usepackage{subcaption} % caption in multiple figures
+\usepackage{amsfonts, amsmath, amssymb}
+\usepackage[none]{hyphenat}
+\usepackage{fancyhdr} % do a nice header
+\pagestyle{fancy}
+\fancyhead{} % clear header
+\fancyhead[R]{\leftmark} % chapter name at the top right
+\fancyfoot{} % clear footer
+\fancyfoot[C]{\thepage} % page number at the centre
+\renewcommand{\headrulewidth}{0.1pt}
+\usepackage{booktabs,threeparttable} % tables with table notes
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{booktabs}
+\usepackage{array}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}p{2.5cm}}
+
+% settings of the referencing software
+\usepackage[
+	backend=biber, 
+    natbib=true,
+    hyperref=false,
+    style=authoryear-icomp,
+    maxbibnames=99,
+    maxcitenames=2,
+    uniquelist=false,
+    ibidtracker=false
+    ]
+{biblatex}
+\DeclareNameAlias{author}{last-first}
+
+% nicer spacing in tables
+\setlength{\tabcolsep}{10pt} % Default value: 6pt
+\renewcommand{\arraystretch}{1.25} % Default value:

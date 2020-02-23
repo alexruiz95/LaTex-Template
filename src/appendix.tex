@@ -1,0 +1,103 @@
+\chapter{Writing Equations}
+
+The following present the details of the different turbulence closure models used. For a complete explanation of the implementation of the different models, refer to \citet{starccm}.
+
+\section{Different Equations}
+Menter's formulation of the $k$-$\omega$ turbulence model is used \citep{menter1994two}, where the turbulent kinematic energy $k$ is given by
+\begin{equation}
+\frac{Dk}{Dt}=\tau_{ij}\frac{\partial u_{i}}{\partial x_{j}}-\beta^{\star}\rho\omega k+\frac{\partial}{\partial x_{j}}\left[(\mu+\sigma_{k1}\mu_{t})\frac{\partial k}{\partial x_{j}}\right] \,,
+\end{equation}
+and the specific dissipation rate $\omega$,
+\begin{equation}
+\begin{split}
+\frac{D\rho\omega}{Dt} & =\frac{\gamma}{\nu_{t}}\tau_{ij}\frac{\partial u_{i}}{\partial x_{j}}-\beta\rho\omega^{2}+\frac{\partial}{\partial x_{j}}\left[(\mu+\sigma_{\omega}\mu_{t})\frac{\partial\omega}{\partial x_{j}}\right] \\
+& +2\rho(1-F_{1})\sigma_{\omega 2}\frac{1}{\omega}\frac{\partial k}{\partial x_{j}}\frac{\partial\omega}{\partial x_{j}} \,.
+\end{split}
+\end{equation}
+$F_{1}$ is a blending function that calculates the new model constants $\phi$ from the constant $\phi_{1}$ and $\phi_{2}$,
+\begin{equation}
+\phi=F_{1}\phi_{1}+(1-F_{1})\phi_{2} \,.
+\end{equation}
+The turbulent viscosity is calculated using the turbulent kinetic energy and the specific dissipation rate
+\begin{equation}
+\nu_{t}=\frac{a_{1}k}{\max(a_{1}\omega;\Omega F_{2})} \,,
+\end{equation}
+with
+\begin{equation}
+F_2=\tanh(arg_{2}^{2}) \,,
+\end{equation}
+where,
+\begin{equation}
+arg_{2}=max\left(2\frac{\sqrt{k}}{0.09\omega y};\frac{500\nu}{y^2 \omega}\right)  \,.
+\end{equation}
+The constant of set $\phi_{1}$ are (SST inner):
+\begin{table}[H]
+\centering
+	\begin{tabular}{ccccc}
+	$\kappa$ = 0.41 & $\beta^{\star}$ = 0.09 & $\beta_{1}$ = 0.0750 & $\sigma_{k1}$ = 0.85 \\ 
+	$\sigma_{\omega 1}$ = 0.5 & $a_{1}$ = 0.31 &  \multicolumn{2}{c}{$\gamma_{1}=\beta_{1}/\beta^{\star}-\sigma_{\omega 1}\kappa^{2}/\sqrt{\beta^{\star}}$} \\
+	\end{tabular}
+\end{table}
+\noindent
+The constant of set $\phi_{2}$ are (standard $k$-$\epsilon$):
+\begin{table}[H]
+\centering
+	\begin{tabular}{ccccc}
+	$\kappa$ = 0.41 & $\beta^{\star}$ = 0.09 & $\beta_{2}$ = 0.0828 & $\sigma_{k2}$ = 1.0 \\ 
+	$\sigma_{\omega 2}$ = 0.856 &  \multicolumn{3}{c}{$\gamma_{2}=\beta_{2}/\beta^{\star}-\sigma_{\omega 2}\kappa^{2}/\sqrt{\beta^{\star}}$} \\
+	\end{tabular}
+\end{table}
+
+\chapter{Other Tricks}
+
+\section{Standard appendix}
+Boundary layer theory can be used to determine the required first cell height and the depth of the boundary layer for meshing. First the Reynolds number of the simulation is determined, using fresh water properties
+\begin{equation} 
+	Re_{x}=\frac{Ux}{\nu}=\frac{0.76\cdot2.9091}{1.138\times10^{-6}}=1.94\times10^{6} \,.
+\end{equation}
+The wall distance can be calculated using the ITTC skin-friction correlation line
+\begin{equation}
+	C_f = \frac{0.075}{(\log(Re_x)-2)^2}=\frac{0.075}{(\log(1.94\times10^{6})-2)^2}=4.078\times10^{-3} \,,
+\end{equation} 
+for $Re_x < 10^9$. The wall shear stress can be expressed as
+\begin{equation}
+\tau_{w} = \frac{1}{2}\rho U^2C_f  = \frac{1}{2}\cdot 999.1026 \cdot 0.76^{2}\cdot4.078\times10^{-3}= 1.176 \,.
+\end{equation}
+From this the friction velocity can be calculated
+\begin{equation}
+u_{*} = \sqrt{\frac{\tau_{w}}{\rho}} = \sqrt{\frac{1.176}{9989.1026}}=0.0343 \,.
+\end{equation}
+And finally, the wall distance
+\begin{equation}
+y = \frac{y^{+}\nu}{u_{*}}=\frac{30\cdot 1.0034\times10^{-6} }{0.0343}= 0.000994 m \,.
+\end{equation}
+With a target y+ $\sim30$ the required first cell height is (this gives us the position of the first node, which is at the centre of the cell)
+\begin{equation}
+y=0.00198 m \,\,\sim \,\,2 mm \,.
+\end{equation}
+The total boundary layer depth can be estimated using Schilchting formula for a turbulent boundary layer over a flat plate \citep{schlichting1979boundary}
+\begin{equation}
+\frac{\delta}{x}=0.37Re_{x}^{-1/5}=0.37\cdot{1.94\times10^{6}}^{-1/5}= 0.02044 \,.
+\end{equation}
+At the stern, the boundary layer depth will be
+\begin{equation}
+\delta = 0.02044\cdot 2.9091 = 0.0595 m \,.
+\end{equation}
+
+
+\section{Include code (Python and more)}
+\begin{lstlisting}[language=Python]
+from scipy.signal import butter, filtfilt
+
+# Filter for experimental data
+def butter_lowpass(cutoff, fs, order):
+    nyq = 0.5 * fs
+    normal_cutoff = cutoff / nyq
+    b, a = butter(order, normal_cutoff, btype='low', analog=False)
+    return b, a
+
+def butter_lowpass_filter(data, cutoff, fs, order):
+    b, a = butter_lowpass(cutoff, fs, order=order)
+    y = filtfilt(b, a, data)					
+    return y
+\end{lstlisting}
